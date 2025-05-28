@@ -33,43 +33,356 @@ html[data-theme="dark"] body {
    color: #fff;  /* Pico.cssのダークテーマの文字色が適用されるはず */
 }
 
+/* ナビゲーション・ヘッダーのスタイル */
+nav {
+  display: flex;
+  justify-content: flex-start; /* 左揃えに変更 */
+  align-items: center;
+  padding: 20px 0;
+  position: relative;
+  width: 100%;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  flex: 0 0 auto;
+  padding-left: 5px; /* 左側の微調整 */
+}
+
+.logo-container li {
+  text-align: center; /* li要素内でのコンテンツを中央揃え */
+  display: flex;
+  justify-content: center; /* フレックスアイテムを中央に配置 */
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 50px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.nav-menu {
+  margin-left: auto;
+}
+
+/* ナビゲーション・ヘッダーのリンク色設定 */
+nav a {
+  color: #333; /* ライトモードではリンクを黒に */
+  text-decoration: none; /* 下線を削除 */
+  transition: color 0.3s ease; /* 色の変化をスムーズに */
+}
+
+nav a:hover {
+  color: #666; /* ホバー時は少し薄く */
+}
+
+/* テーマ切替ボタンのスタイル強化 */
+nav button {
+  color: #333; /* ボタンの色も黒に */
+  font-weight: bold; /* より太く */
+  background-color: rgba(200, 200, 200, 0.2); /* 微妙な背景色を追加 */
+  border-radius: 4px; /* 角を丸く */
+  padding: 6px 12px; /* パディングを追加 */
+  transition: all 0.3s ease; /* スムーズな変化 */
+}
+
+nav button:hover {
+  background-color: rgba(200, 200, 200, 0.4); /* ホバー時は少し濃く */
+}
+
+/* ダークモードでのナビゲーションリンク色 */
+html[data-theme="dark"] nav a {
+  color: #fff; /* ダークモードではリンクを白に */
+}
+
+html[data-theme="dark"] nav a:hover {
+  color: #ccc; /* ダークモードのホバー時は少し薄く */
+}
+
+html[data-theme="dark"] nav button {
+  color: #fff; /* ダークモードでボタンの色も白に */
+  background-color: rgba(60, 60, 60, 0.4); /* ダークモード用のボタン背景色 */
+}
+
+html[data-theme="dark"] nav button:hover {
+  background-color: rgba(60, 60, 60, 0.6); /* ホバー時は少し濃く */
+}
+
+/* メニューが開いたときのリンク色 */
+.nav-menu.active a {
+  color: #333; /* ライトモードの展開メニューでは黒 */
+  font-size: 1.2em; /* フォントサイズを少し大きく */
+}
+
+.nav-menu.active button {
+  color: #333; /* ライトモードの展開メニューではボタンも黒 */
+  font-size: 1.2em;
+}
+
+html[data-theme="dark"] .nav-menu.active a {
+  color: #fff; /* ダークモードの展開メニューでは白 */
+}
+
+html[data-theme="dark"] .nav-menu.active button {
+  color: #fff; /* ダークモードの展開メニューではボタンも白 */
+}
+
 /* ========== レスポンシブ対応 ========== */
+@media (max-width: 1200px) {
+  .logo {
+    font-size: 40px;
+  }
+}
+
 @media (max-width: 1024px) {
   .container {
     max-width: 95vw;
-    padding: 0 2vw;
+    padding: 0 4vw;
+    margin: 0 auto;
   }
+
+  nav {
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 36px; /* 1024px付近でのロゴサイズを調整 */
+  }
+
+  section {
+    margin: 40px 0;
+  }
+
+  h2, h3 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
   nav ul li {
-    font-size: 6vw !important;
+    font-size: 16px !important; /* vwからpxに変更し、固定サイズに */
   }
+
   .hero-section p {
-    font-size: 6vw !important;
+    font-size: 4vw !important;
+    margin: 30px 0;
+  }
+
+  .about.me {
+    gap: 50px;
   }
 }
 
 @media (max-width: 768px) {
   .container {
     max-width: 100vw;
-    padding: 0 1vw;
+    padding: 0 5vw;
   }
+
+  section {
+    margin: 30px 0;
+  }
+
+  nav {
+    position: relative;
+    padding: 15px 0;
+  }
+
+  .logo {
+    font-size: 32px; /* ロゴサイズを調整 */
+  }
+
   nav ul li {
-    font-size: 8vw !important;
+    font-size: 5vw !important;
   }
+
   .hero-section p {
-    font-size: 8vw !important;
+    font-size: 6vw !important;
+    margin: 25px 0;
+  }
+
+  /* ハンバーガーメニュー表示のためのスタイル */
+  .nav-menu {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: block !important;
+    right: 5px; /* 右端からの位置を微調整 */
+  }
+
+  /* メニューが開いたときのスタイル */
+  .nav-menu.active {
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* absoluteからfixedに変更して画面全体をカバー */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* 画面の高さいっぱいに */
+    background-color: rgba(255, 255, 255, 0.95); /* 透過率を0.9から0.95に変更（より不透明に） */
+    padding: 15% 20px; /* 上下のパディングを少し減らす */
+    z-index: 1000;
+    justify-content: center; /* 縦方向の中央揃え */
+    align-items: center; /* 横方向の中央揃え */
+    animation: fadeIn 0.3s ease; /* フェードインアニメーション */
+  }
+
+  /* ダークモードのメニュースタイル */
+  html[data-theme="dark"] .nav-menu.active {
+    background-color: rgba(30, 30, 30, 0.95); /* ダークテーマでの透過背景 */
+  }
+
+  .nav-menu.active li {
+    margin: 15px 0; /* マージンを20pxから15pxに縮小 */
+    text-align: center;
+    width: 100%;
+    font-size: 18px !important; /* フォントサイズを24pxから18pxに縮小 */
+    opacity: 0;
+    animation: slideIn 0.5s ease forwards; /* スライドインアニメーション */
+    animation-delay: calc(0.1s * var(--i)); /* アイテムごとに遅延 */
+  }
+
+  /* メニュー内のボタンサイズも調整 */
+  .nav-menu.active button {
+    font-size: 18px; /* ボタンのサイズも同様に小さく */
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+}
+
+/* 768px～500pxの範囲で特別な調整 */
+@media (max-width: 768px) and (min-width: 481px) {
+  .logo {
+    font-size: 28px; /* この範囲でのロゴサイズ */
+  }
+
+  .hamburger-menu {
+    font-size: 14px; /* メニューテキストサイズ調整 */
+    padding: 8px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
     max-width: 100vw;
-    padding: 0 0.5vw;
+    padding: 0 6vw;
   }
+
+  section {
+    margin: 25px 0;
+  }
+
   nav ul li {
-    font-size: 10vw !important;
+    font-size: 6vw !important; /* !重要から!importantに修正 */
   }
+
   .hero-section p {
-    font-size: 10vw !important;
+    font-size: 7vw !important; /* !重要から!importantに修正 */
+    margin: 20px 0;
+  }
+
+  .about.me {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  h2, h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    max-width: 100vw;
+    padding: 0 6vw;
+  }
+
+  .logo {
+    font-size: 24px; /* 小さい画面でのロゴサイズ */
+  }
+
+  .hamburger-menu {
+    font-size: 14px;
+    padding: 6px;
+  }
+}
+
+/* ハンバーガーメニューのスタイル */
+.hamburger-menu {
+  position: absolute;
+  right: 5px; /* 右側からのパディングを追加 */
+  top: 50%; /* 上下中央 */
+  transform: translateY(-50%); /* 上下中央揃え補正 */
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: lowercase;
+}
+
+/* ハンバーガーメニューのz-indexを上げる */
+.hamburger-menu {
+  z-index: 1001; /* メニューよりも前面に */
+}
+
+/* menu/closeテキスト表示の切り替え */
+.hamburger-menu .menu-text {
+  display: block;
+}
+
+.hamburger-menu .close-text {
+  display: none;
+}
+
+.hamburger-menu.active .menu-text {
+  display: none;
+}
+
+.hamburger-menu.active .close-text {
+  display: block;
+}
+
+/* デスクトップでは通常メニュー表示、ハンバーガー非表示 */
+@media (min-width: 769px) {
+  .hamburger-menu {
+    display: none;
+  }
+
+  .nav-menu {
+    display: flex;
+  }
+}
+
+/* アニメーション定義 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
