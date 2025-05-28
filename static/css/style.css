@@ -33,3 +33,43 @@ html[data-theme="dark"] body {
    color: #fff;  /* Pico.cssのダークテーマの文字色が適用されるはず */
 }
 
+/* ========== レスポンシブ対応 ========== */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 95vw;
+    padding: 0 2vw;
+  }
+  nav ul li {
+    font-size: 6vw !important;
+  }
+  .hero-section p {
+    font-size: 6vw !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 100vw;
+    padding: 0 1vw;
+  }
+  nav ul li {
+    font-size: 8vw !important;
+  }
+  .hero-section p {
+    font-size: 8vw !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    max-width: 100vw;
+    padding: 0 0.5vw;
+  }
+  nav ul li {
+    font-size: 10vw !important;
+  }
+  .hero-section p {
+    font-size: 10vw !important;
+  }
+}
+
