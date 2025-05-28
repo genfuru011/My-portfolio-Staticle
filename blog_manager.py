@@ -80,7 +80,7 @@ class BlogManager:
                 return post_dict
 
         except Exception as e:
-            print(f"Error parsing {filename}: {str(e)}")
+            logging.error(f"Error parsing {filename}: {str(e)}")
             return None
 
     def get_all_posts(self):
