@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" x-data="{ darkMode: localStorage.getItem('pico-theme') === 'dark' }">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog - Staticle</title>
+
+    <!-- スタイルシート -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
+    <%= stylesheet_link_tag "style.css" %>
+
+    <!-- フォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- HTMX & Alpine.js -->
+    <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
+    <script src="https://unpkg.com/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <!-- ナビゲーション -->
+        <nav>
+            <ul class="logo-container">
+                <li><h1 class="logo"><%= link_to "Staticle", root_path, style: "text-decoration: none;" %></h1></li>
+            </ul>
+            <!-- ハンバーガーメニュー -->
+            <div class="hamburger-menu">
+                <span class="menu-text">menu</span>
+                <span class="close-text">close</span>
+            </div>
+            <!-- メニュー -->
+            <ul class="nav-menu">
+                <li style="--i:1;"><%= link_to "About me", "#{root_path}#about-me" %></li>
+                <li style="--i:2;"><%= link_to "Blog", blog_path, class: "active-link" %></li>
+                <li style="--i:3;"><button id="theme-toggle-button" class="contrast" x-on:click="darkMode = !darkMode">Theme</button></li>
+            </ul>
+        </nav>
+
+        <!-- ブログヘッダー -->
+        <header class="blog-header">
+            <h2 class="fade-in">Blog</h2>
+            <p class="fade-in delay-1">思考と創造の断片</p>
+        </header>
+
+        <!-- ブログリスト -->
+        <section class="blog-list" x-data="{ filter: '<%= @current_category || 'all' %>' }">
+            <!-- フィルターオプション -->
+            <div class="blog-filter fade-in delay-2">
+                <label for="category-select">カテゴリ:</label>
+                <select x-model="filter">
+                    <option value="all">All</option>
+                    <% @categories.each do |category, count| %>
+                        <option value="<%= category %>"><%= category.capitalize %> (<%= count %>)</option>
+                    <% end %>
+                </select>
+            </div>
+
+            <!-- 記事リスト -->
+            <div class="posts-grid">
+                <% @posts.each do |post| %>
+                    <article class="post-card fade-in delay-3" 
+                             x-show="filter === 'all' || filter === '<%= post[:category]&.downcase %>'">
+                        <%= link_to blog_post_path(post[:slug]), style: "text-decoration: none; color: inherit;" do %>
+                            <header>
+                                <h3><%= post[:title] %></h3>
+                                <div class="post-meta">
+                                    <time><%= post[:formatted_date] %></time>
+                                    <% if post[:category].present? %>
+                                        <span class="category"><%= post[:category] %></span>
+                                    <% end %>
+                                </div>
+                                <div class="post-tags">
+                                    <% post[:tags]&.first(2)&.each do |tag| %>
+                                        <span class="tag"><%= tag %></span>
+                                    <% end %>
+                                </div>
+                            </header>
+                            <% if post[:excerpt].present? %>
+                                <p class="card-excerpt"><%= post[:excerpt] %></p>
+                            <% end %>
+                        <% end %>
+                    </article>
+                <% end %>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <hr>
+        <p><small>&copy; 2025 Hiroto Furugen</small></p>
+    </footer>
+
+    <!-- スクリプト -->
+    <%= javascript_importmap_tags %>
+</body>
+</html>

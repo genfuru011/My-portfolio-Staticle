@@ -2,7 +2,7 @@
 
 「AIとペン先から、未来のWebを紡ぐ。思考の跡が、デジタルの美を際立たせる。」
 
-StaticleはFlaskで構築された、シンプルで美しいポートフォリオ兼ブログサイトです。
+StaticleはRuby on Railsで構築された、シンプルで美しいポートフォリオ兼ブログサイトです。
 
 ## 機能
 
@@ -15,29 +15,31 @@ StaticleはFlaskで構築された、シンプルで美しいポートフォリ�
 
 ## 技術スタック
 
-- **バックエンド**: Python/Flask
+- **バックエンド**: Ruby on Rails 8.0
 - **フロントエンド**: HTML, CSS, JavaScript
 - **CSS フレームワーク**: [PicoCSS](https://picocss.com/)
+- **マークダウン処理**: Redcarpet
+- **フロントマター解析**: front_matter_parser
 - **フォント**: Google Fonts (Inter, Lora, Noto Sans JP)
 
 ## プロジェクト構造
 
 ```
 staticle/
-├── app.py                 # メインアプリケーションファイル
-├── blog_manager.py        # ブログ記事管理クラス
-├── requirements.txt       # 依存パッケージリスト
-├── content/               # コンテンツフォルダ
-│   └── posts/             # マークダウン形式のブログ記事
-├── static/                # 静的ファイル
-│   ├── css/               # スタイルシート
-│   ├── img/               # 画像ファイル
-│   └── js/                # JavaScriptファイル
-└── templates/             # HTMLテンプレート
-    ├── 404.html           # 404エラーページ
-    ├── blog_post.html     # 個別ブログ記事テンプレート
-    ├── blog.html          # ブログ一覧ページ
-    └── index.html         # トップページ
+├── app/
+│   ├── controllers/         # Rails コントローラー
+│   │   ├── pages_controller.rb    # ホームページ
+│   │   └── blog_controller.rb     # ブログ機能
+│   ├── services/           # サービスクラス
+│   │   └── blog_manager.rb        # ブログ記事管理
+│   ├── views/              # ERB テンプレート
+│   │   ├── pages/          # ホームページビュー
+│   │   └── blog/           # ブログビュー
+│   └── assets/             # 静的アセット
+├── content/                # コンテンツフォルダ
+│   └── posts/              # マークダウン形式のブログ記事
+├── config/                 # Rails設定
+└── public/                 # 公開静的ファイル
 ```
 
 ## セットアップ方法
@@ -48,28 +50,27 @@ staticle/
    cd staticle
    ```
 
-2. 仮想環境を作成して有効化する
+2. Ruby 3.2.3以上がインストールされていることを確認する
    ```
-   python -m venv venv
-   source venv/bin/activate  # Windowsの場合: venv\Scripts\activate
+   ruby --version
    ```
 
 3. 依存パッケージをインストールする
    ```
-   pip install -r requirements.txt
+   bundle install
    ```
 
 4. アプリケーションを実行する
    ```
-   python app.py
+   rails server
    ```
 
-5. ブラウザで `http://localhost:5000` にアクセスする
+5. ブラウザで `http://localhost:3000` にアクセスする
 
 ## ブログ記事の作成方法
 
 1. `content/posts/` ディレクトリに `.md` 形式のマークダウンファイルを作成します
-2. 記事のフロントマターに必要な情報を記載します:
+2. 記事のフロントマターに必要な情報を記載します：
 
 ```markdown
 ---
@@ -85,9 +86,9 @@ excerpt: 記事の概要（省略可能）
 
 ## カスタマイズ
 
-- `static/css/style.css` でスタイルをカスタマイズできます
-- `templates/` 内のHTMLファイルでレイアウトを変更できます
-- `static/js/` 内のJavaScriptファイルで動的な機能を追加できます
+- `app/assets/stylesheets/style.css` でスタイルをカスタマイズできます
+- `app/views/` 内のERBファイルでレイアウトを変更できます
+- `app/assets/javascripts/` 内のJavaScriptファイルで動的な機能を追加できます
 
 ## ライセンス
 
