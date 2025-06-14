@@ -169,3 +169,56 @@ class BlogManager:
 
         # 必要な数だけ取得
         return [item['post'] for item in related_posts[:max_posts]]
+
+    def search_posts(self, query):
+        """検索クエリに基づいて記事を検索する"""
+        if not query or not query.strip():
+            return []
+            
+        query = query.lower().strip()
+        matching_posts = []
+        
+        for post in self.posts:
+            score = 0
+            
+            # タイトルでの検索（高スコア）
+            if query in post.get('title', '').lower():
+                score += 10
+                
+            # カテゴリでの検索
+            if query in post.get('category', '').lower():
+                score += 5
+                
+            # タグでの検索
+            tags = post.get('tags', [])
+            for tag in tags:
+                if query in tag.lower():
+                    score += 3
+                    
+            # 抜粋での検索
+            if query in post.get('excerpt', '').lower():
+                score += 2
+                
+            # 本文での検索（低スコア）
+            if query in post.get('content', '').lower():
+                score += 1
+                
+            if score > 0:
+                matching_posts.append({
+                    'post': post,
+                    'score': score
+                })
+        
+        # スコア順にソート
+        matching_posts.sort(key=lambda x: x['score'], reverse=True)
+        
+        return [item['post'] for item in matching_posts]
+
+    def get_post_stats(self):
+        """ブログの統計情報を取得する"""
+        return {
+            'total_posts': len(self.posts),
+            'categories': len(self.get_categories()),
+            'tags': len(self.get_tags()),
+            'latest_post': self.posts[0] if self.posts else None
+        }

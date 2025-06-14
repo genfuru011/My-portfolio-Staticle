@@ -1,0 +1,69 @@
+<!-- 投稿リスト用HTMXコンポーネント -->
+{% for post in posts %}
+<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+    <!-- 投稿のメタ情報 -->
+    <div class="p-6">
+        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+            <time datetime="{{ post.date }}">{{ post.date.strftime('%Y年%m月%d日') }}</time>
+            {% if post.category %}
+            <span class="mx-2">•</span>
+            <span class="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-2 py-1 rounded text-xs font-medium">
+                {{ post.category }}
+            </span>
+            {% endif %}
+        </div>
+        
+        <!-- タイトル -->
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 hover:text-primary-600 transition-colors">
+            <a href="/blog/{{ post.slug }}">{{ post.title }}</a>
+        </h3>
+        
+        <!-- 抜粋 -->
+        {% if post.excerpt %}
+        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+            {{ post.excerpt }}
+        </p>
+        {% endif %}
+        
+        <!-- タグ -->
+        {% if post.tags %}
+        <div class="flex flex-wrap gap-2 mb-4">
+            {% for tag in post.tags %}
+            <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                  hx-get="/htmx/posts?tag={{ tag }}"
+                  hx-target="#post-list"
+                  hx-indicator="#loading">
+                #{{ tag }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- 続きを読むリンク -->
+        <div class="flex items-center justify-between">
+            <a href="/blog/{{ post.slug }}" 
+               class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center group">
+                続きを読む
+                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+            
+            <!-- 読了時間（あれば） -->
+            {% if post.reading_time %}
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+                📖 {{ post.reading_time }}分
+            </span>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% else %}
+<div class="col-span-full text-center py-12">
+    <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">まだ投稿がありません</h3>
+    <p class="text-gray-500 dark:text-gray-400">最初の記事を投稿しましょう！</p>
+</div>
+{% endfor %}

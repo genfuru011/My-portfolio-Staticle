@@ -1,104 +1,110 @@
-<!DOCTYPE html>
-<html lang="ja" data-theme="light">
-<!-- ヘッダー部分: メタデータ、CSSリンク、フォントリンク -->
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- PicoCSSフレームワーク -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
-    <!-- カスタムCSSスタイル -->
-    <link rel="stylesheet" href="/static/css/style.css">
-    <!-- Googleフォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-    <title>Staticle My portfolio</title>
-</head>
-<body>
-    <!-- メインコンテンツエリア -->
-    <main class="container">
-        <!-- ナビゲーションバー -->
-        <nav>
-            <!-- ロゴエリア -->
-            <ul class="logo-container">
-                <li><h1 class="logo"><strong>Staticle</strong></h1></li>
-            </ul>
-            <!-- ハンバーガーメニューボタン -->
-            <div class="hamburger-menu">
-                <span class="menu-text">menu</span>
-                <span class="close-text">close</span>
+{% extends "base.html" %}
+
+{% block title %}Staticle - Modern Blog with HTMX{% endblock %}
+
+{% block content %}
+<!-- ヒーローセクション -->
+<section class="text-center py-20">
+    <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+        Welcome to <span class="text-primary-600">Staticle</span>
+    </h1>
+    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+        Modern blog built with HTMX, FastAPI, and TailwindCSS. 
+        Fast, interactive, and developer-friendly.
+    </p>
+    <div class="space-x-4">
+        <a href="/blog" 
+           class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+            Read Blog
+        </a>
+        <a href="#about" 
+           class="inline-block border border-gray-300 dark:border-gray-600 hover:border-primary-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-6 rounded-lg transition-colors">
+            Learn More
+        </a>
+    </div>
+</section>
+
+<!-- 最新記事プレビュー -->
+<section class="py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Latest Posts</h2>
+        <p class="text-gray-600 dark:text-gray-300">Stay updated with our latest articles and insights</p>
+    </div>
+    
+    <!-- HTMX で最新記事を読み込み -->
+    <div hx-get="/htmx/posts?limit=3" 
+         hx-trigger="load" 
+         hx-indicator="#loading" 
+         class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- ローディング表示 -->
+        <div id="loading" class="col-span-full text-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+            <p class="mt-2 text-gray-500">Loading posts...</p>
+        </div>
+    </div>
+</section>
+
+<!-- 特徴セクション -->
+<section id="about" class="py-16 bg-white dark:bg-gray-800 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Why Staticle?</h2>
+            <p class="text-gray-600 dark:text-gray-300">Built with modern technologies for optimal performance</p>
+        </div>
+        
+        <!-- 統計情報 -->
+        {% if stats %}
+        <div class="grid gap-6 md:grid-cols-4 mb-12">
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-primary-600 mb-1">{{ stats.total_posts }}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">記事</div>
             </div>
-            <!-- ナビゲーションメニュー項目 -->
-            <ul class="nav-menu">
-                <li style="--i:1;"><a href="#about-me">About me</a></li>
-                <li style="--i:2;"><a href="/blog">Blog</a></li>
-                <li style="--i:3;"><button id="theme-toggle-button" class="contrast">Theme</button></li>
-            </ul>
-        </nav>
-
-        <!-- メインセクション -->
-        <section style="font-family:Noto Sans JP, Inter;">
-            <!-- ヒーローセクション - キャッチコピー -->
-            <div class="hero-section">
-            <p style="font-size: 50px; font-weight: bolder">AIとペン先から、未来のWebを紡ぐ。<br>思考の跡が、デジタルの美を際立たせる。<br>Staticle</p>
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-primary-600 mb-1">{{ stats.categories }}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">カテゴリ</div>
             </div>
-
-            <!-- About Me セクション -->
-            <h2 style="border-bottom: 5px solid; border-color:lightsteelblue; display: inline-block;">About me</h2>
-                <div class="about me" style="display: flex; align-items: center; gap: 100px; text-align: left;">
-                    <div class="content" id="about-me">
-                        <!-- プロフィール情報 -->
-                        <hgroup>
-                            <h3>Hiroto Furugen</h3>
-                            <p>Internship student ( Designer / Developer / Writer ) B2</p>
-                        </hgroup>
-                        <!-- ソーシャルリンク -->
-                        <div class="social-links" style="display: flex; gap: 10px;">
-                            <a href="https://www.linkedin.com/in/大翔-古堅-43b517340" target="_blank">LinkedIn</a>
-                            <a href="https://github.com/genfuru011" target="_blank">GitHub</a>
-                            <a href="https://www.instagram.com/hiro_film0119/" target="_blank">Instagram</a>
-                        </div>
-
-                        <!-- プロジェクトセクション -->
-                        <h3 style="border-bottom: 5px solid; border-color:lightsteelblue; display: inline-block; margin-top: 40px;">Projects</h3>
-                        <div class="grid" style="text-align: center; justify-content: center; align-items: center;">
-                           <div><h3>In Progress</h3></div>
-                           <div><h3>In Progress</h3></div>
-                        </div>
-
-                        <!-- 自己紹介セクション -->
-                        <h3 style="border-bottom: 5px solid; border-color:lightsteelblue; display: inline-block; margin-top: 40px;">Introduce</h3>
-                        <p>私はデザイン、開発、ライティングに情熱を持つインターンシップ生です。新しい技術やアイデアを学びながら、クリエイティブなプロジェクトに取り組んでいます。</p>
-
-                        <!-- 経歴セクション -->
-                        <h3 style="border-bottom: 5px solid; border-color:lightsteelblue; display: inline-block;">Bio</h3>
-                        <p>2005  Born in chiba (千葉県生まれ), Greater Tokyo, Japan.</p>
-                        <p>2024 to present  Hosei University (法政大学), Bachelor of Arts (学士).</p>
-                        <p>2024 to present  Internship at GMO Internet group.inc, GMO NIKKO,<br>(Web/graphic designer,Marketing planner).</p>
-
-                        <!-- スキルセクション -->
-                        <h3 style="border-bottom: 5px solid; border-color:lightsteelblue; display: inline-block;">Skills</h3>
-                        <ul>
-                            <li>Web Design (figma)</li>
-                            <li>Graphic Design (Adobe Illustrator, Photoshop)</li>
-                            <li>Marketing Planning (市場調査、戦略立案)</li>
-                            <li>Front-end Development (HTML, CSS)</li>
-                            <li>Back-end Development (Python, Flask)</li>
-                            <li>AI Integration (ChatGPT, Google Apps Script, LLM Tuning SFT DPO)</li>
-                        </ul>
-                    </div>
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-primary-600 mb-1">{{ stats.tags }}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">タグ</div>
+            </div>
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-primary-600 mb-1">∞</div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">可能性</div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="grid gap-8 md:grid-cols-3">
+            <div class="text-center">
+                <div class="bg-primary-100 dark:bg-primary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                 </div>
-        </section>
-    </main>
-
-    <!-- フッターセクション -->
-    <footer class="container">
-        <hr>
-        <p><small>&copy; 2025 Hiroto Furugen</small></p>
-    </footer>
-　　
-    <!-- JavaScriptファイル読み込み -->
-    <script src="/static/js/theme.js"></script>
-    <script src="/static/js/hamburger.js"></script>
-</body>
-</html>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Lightning Fast</h3>
+                <p class="text-gray-600 dark:text-gray-300">HTMX provides lightning-fast interactions without the complexity of SPA frameworks</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-primary-100 dark:bg-primary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Developer Friendly</h3>
+                <p class="text-gray-600 dark:text-gray-300">FastAPI backend with automatic API documentation and type safety</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-primary-100 dark:bg-primary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Modern Design</h3>
+                <p class="text-gray-600 dark:text-gray-300">Beautiful, responsive design with TailwindCSS and dark mode support</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

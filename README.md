@@ -1,98 +1,181 @@
-# Staticle - ポートフォリオ & ブログ
+# Staticle - Modern Blog Platform
 
-「AIとペン先から、未来のWebを紡ぐ。思考の跡が、デジタルの美を際立たせる。」
+A modern, fast, and interactive blog platform built with **HTMX**, **FastAPI**, and **TailwindCSS**.
 
-StaticleはFlaskで構築された、シンプルで美しいポートフォリオ兼ブログサイトです。
+## 🚀 Features
 
-## 機能
+- **Lightning Fast**: HTMX provides instant interactions without SPA complexity
+- **Modern Stack**: FastAPI backend with automatic API documentation
+- **Beautiful Design**: TailwindCSS with dark mode support
+- **Developer Friendly**: Type-safe Python with automatic reloading
+- **Interactive**: Smooth filtering and dynamic content loading
+- **SEO Friendly**: Server-side rendering with progressive enhancement
 
-- **レスポンシブデザイン**: モバイルからデスクトップまで様々なデバイスに対応
-- **ダークモード/ライトモード**: ユーザーの好みに合わせたテーマ切り替え
-- **ブログ機能**: マークダウンでコンテンツを簡単に管理
-  - カテゴリとタグによる記事の整理
-  - 関連記事の表示
-- **シンプルな管理**: 記事はマークダウンファイルとして`content/posts/`に配置するだけ
+## 🛠 Tech Stack
 
-## 技術スタック
+### Frontend
+- **HTMX** - Dynamic HTML interactions
+- **TailwindCSS** - Utility-first CSS framework
+- **Alpine.js** - Minimal JavaScript for interactivity
 
-- **バックエンド**: Python/Flask
-- **フロントエンド**: HTML, CSS, JavaScript
-- **CSS フレームワーク**: [PicoCSS](https://picocss.com/)
-- **フォント**: Google Fonts (Inter, Lora, Noto Sans JP)
+### Backend
+- **FastAPI** - Modern Python web framework
+- **Jinja2** - Template engine
+- **Python-Frontmatter** - Markdown with metadata support
 
-## プロジェクト構造
+## 📁 Project Structure
 
 ```
 staticle/
-├── app.py                 # メインアプリケーションファイル
-├── blog_manager.py        # ブログ記事管理クラス
-├── requirements.txt       # 依存パッケージリスト
-├── content/               # コンテンツフォルダ
-│   └── posts/             # マークダウン形式のブログ記事
-├── static/                # 静的ファイル
-│   ├── css/               # スタイルシート
-│   ├── img/               # 画像ファイル
-│   └── js/                # JavaScriptファイル
-└── templates/             # HTMLテンプレート
-    ├── 404.html           # 404エラーページ
-    ├── blog_post.html     # 個別ブログ記事テンプレート
-    ├── blog.html          # ブログ一覧ページ
-    └── index.html         # トップページ
+├── main.py                 # FastAPI application
+├── app.py                  # Legacy Flask app (for migration)
+├── blog_manager.py         # Blog content management
+├── requirements.txt        # Python dependencies
+├── start.sh               # Development server script
+├── templates/
+│   ├── base.html          # Base template with HTMX/TailwindCSS
+│   ├── index_new.html     # Homepage
+│   ├── blog_new.html      # Blog listing page
+│   └── components/        # HTMX components
+├── content/posts/         # Markdown blog posts
+└── static/               # Static assets
 ```
 
-## セットアップ方法
+## 🚀 Quick Start
 
-1. リポジトリをクローンする
-   ```
-   git clone <repository-url>
-   cd staticle
-   ```
+### Development Server
 
-2. 仮想環境を作成して有効化する
-   ```
-   python -m venv venv
-   source venv/bin/activate  # Windowsの場合: venv\Scripts\activate
-   ```
+```bash
+# Make script executable
+chmod +x start.sh
 
-3. 依存パッケージをインストールする
-   ```
-   pip install -r requirements.txt
-   ```
+# Start development server
+./start.sh
+```
 
-4. アプリケーションを実行する
-   ```
-   python app.py
-   ```
+Or manually:
 
-5. ブラウザで `http://localhost:5000` にアクセスする
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate
 
-## ブログ記事の作成方法
+# Install dependencies
+pip install -r requirements.txt
 
-1. `content/posts/` ディレクトリに `.md` 形式のマークダウンファイルを作成します
-2. 記事のフロントマターに必要な情報を記載します:
+# Start FastAPI server
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Access Points
+
+- **Main Site**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **Interactive API**: http://localhost:8000/redoc
+
+## 📝 Adding Content
+
+Create markdown files in `content/posts/` with frontmatter:
 
 ```markdown
 ---
-title: 記事のタイトル
-date: YYYY-MM-DD
-category: カテゴリ名
-tags: [タグ1, タグ2, タグ3]
-excerpt: 記事の概要（省略可能）
+title: "Your Post Title"
+date: 2025-01-15
+category: "Technology"
+tags: ["python", "web", "htmx"]
+excerpt: "A brief description of your post"
 ---
 
-ここから本文を記載します。マークダウン形式で記述できます。
+# Your Post Content
+
+Write your content in markdown here...
 ```
 
-## カスタマイズ
+## 🎨 Architecture Highlights
 
-- `static/css/style.css` でスタイルをカスタマイズできます
-- `templates/` 内のHTMLファイルでレイアウトを変更できます
-- `static/js/` 内のJavaScriptファイルで動的な機能を追加できます
+### HTMX Integration
+- Dynamic content loading without page refreshes
+- Progressive enhancement approach
+- Server-side rendering with client-side interactions
 
-## ライセンス
+### FastAPI Benefits
+- Automatic API documentation
+- Type hints and validation
+- High performance async support
+- Easy testing and development
 
-このプロジェクトはMITライセンスの下で公開されています。
+### TailwindCSS Design
+- Utility-first CSS approach
+- Responsive design out of the box
+- Dark mode support
+- Modern, clean aesthetics
+
+## 🔄 Migration from Flask
+
+This project supports gradual migration from Flask to FastAPI:
+
+1. **Current**: Flask app in `app.py` (legacy)
+2. **New**: FastAPI app in `main.py` (modern)
+3. **Shared**: `blog_manager.py` works with both
+
+## 📦 Deployment
+
+### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel --prod
+```
+
+### Docker
+
+```dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+## 🔧 Development
+
+### Adding New Features
+
+1. **Backend**: Add routes in `main.py`
+2. **Frontend**: Create HTMX components in `templates/components/`
+3. **Styling**: Use TailwindCSS classes
+4. **Content**: Add markdown files to `content/posts/`
+
+### Testing
+
+```bash
+# Run FastAPI with auto-reload
+uvicorn main:app --reload
+
+# Test specific endpoints
+curl http://localhost:8000/htmx/posts
+```
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ---
 
-© 2025 Staticle
+Built with ❤️ using HTMX, FastAPI, and TailwindCSS.

@@ -1,102 +1,222 @@
-<!DOCTYPE html>
-<html lang="ja" data-theme="light" x-data="{ darkMode: localStorage.getItem('pico-theme') === 'dark' }">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ post.title }} - Staticle Blog</title>
+{% extends "base.html" %}
 
-    <!-- スタイルシート -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@latest/css/pico.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
+{% block title %}{{ post.title }} - Staticle{% endblock %}
 
-    <!-- フォント -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+{% block content %}
+<!-- パンくずナビ -->
+<nav class="mb-6">
+    <ol class="flex text-sm text-gray-500 dark:text-gray-400">
+        <li><a href="/" class="hover:text-primary-600">Home</a></li>
+        <li class="mx-2">/</li>
+        <li><a href="/blog" class="hover:text-primary-600">Blog</a></li>
+        <li class="mx-2">/</li>
+        <li class="text-gray-900 dark:text-white">{{ post.title }}</li>
+    </ol>
+</nav>
 
-    <!-- HTMX & Alpine.js -->
-    <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
-    <script src="https://unpkg.com/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
-</head>
-<body>
-    <main class="container">
-        <!-- ナビゲーション -->
-        <nav>
-            <ul class="logo-container">
-                <li><h1 class="logo"><a href="/" style="text-decoration: none;"><strong>Staticle</strong></a></h1></li>
-            </ul>
-            <!-- ハンバーガーメニュー -->
-            <div class="hamburger-menu">
-                <span class="menu-text">menu</span>
-                <span class="close-text">close</span>
-            </div>
-            <!-- メニュー -->
-            <ul class="nav-menu">
-                <li style="--i:1;"><a href="/#about-me">About me</a></li>
-                <li style="--i:2;"><a href="/blog" class="active-link">Blog</a></li>
-                <li style="--i:3;"><button id="theme-toggle-button" class="contrast" x-on:click="darkMode = !darkMode">Theme</button></li>
-            </ul>
-        </nav>
+<!-- 記事ヘッダー -->
+<header class="mb-8">
+    <div class="mb-4">
+        {% if post.category %}
+        <span class="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 px-3 py-1 rounded-full text-sm font-medium">
+            {{ post.category }}
+        </span>
+        {% endif %}
+    </div>
+    
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+        {{ post.title }}
+    </h1>
+    
+    {% if post.excerpt %}
+    <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">
+        {{ post.excerpt }}
+    </p>
+    {% endif %}
+    
+    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <time datetime="{{ post.date }}">{{ post.date.strftime('%Y年%m月%d日') }}</time>
+        </div>
+        
+        {% if post.reading_time %}
+        <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {{ post.reading_time }}分で読めます
+        </div>
+        {% endif %}
+        
+        <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            <span id="view-count">1,234</span> views
+        </div>
+    </div>
+</header>
 
-        <!-- 記事コンテンツ -->
-        <article class="blog-post fade-in">
-            <header>
-                <a href="/blog" class="back-link fade-in delay-1">&larr; 記事一覧へ戻る</a>
-                <h2 class="fade-in">{{ post.title }}</h2>
-                <div class="post-meta fade-in delay-1">
-                    <time>{{ post.formatted_date }}</time>
-                    {% if post.category %}
-                    <a href="/blog/category/{{ post.category }}" class="tag {{ post.category }}">{{ post.category }}</a>
-                    {% endif %}
-                    {% for tag in post.tags %}
-                    <a href="/blog/tag/{{ tag }}" class="tag">{{ tag }}</a>
-                    {% endfor %}
-                </div>
-            </header>
+<!-- 記事本文 -->
+<article class="prose prose-lg max-w-none dark:prose-invert mb-12">
+    {{ post.content|safe }}
+</article>
 
-            <div class="post-content fade-in delay-2">
-                {{ post.content | safe }}
-            </div>
+<!-- タグ -->
+{% if post.tags %}
+<div class="mb-8">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tags</h3>
+    <div class="flex flex-wrap gap-2">
+        {% for tag in post.tags %}
+        <a href="/blog?tag={{ tag }}" 
+           class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm hover:bg-primary-100 hover:text-primary-800 dark:hover:bg-primary-900 dark:hover:text-primary-200 transition-colors">
+            #{{ tag }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
-            <!-- 関連記事のセクション -->
-            <div class="related-posts fade-in delay-3">
-                <h3>関連記事</h3>
-                <div class="blog-grid blog-grid-small">
-                    {% if related_posts %}
-                        {% for related in related_posts %}
-                        <article class="blog-card fade-in">
-                            <a href="{{ related.url }}" style="text-decoration: none; color: inherit;">
-                                <div class="card-date">{{ related.formatted_date }}</div>
-                                <h3>{{ related.title }}</h3>
-                                <div class="card-tags">
-                                    {% if related.category %}
-                                    <span class="tag {{ related.category }}">{{ related.category|capitalize }}</span>
-                                    {% endif %}
-                                    {% for tag in related.tags[:2] %}
-                                    <span class="tag">{{ tag }}</span>
-                                    {% endfor %}
-                                </div>
-                                {% if related.excerpt %}
-                                <p class="card-excerpt">{{ related.excerpt }}</p>
-                                {% endif %}
-                            </a>
-                        </article>
-                        {% endfor %}
-                    {% else %}
-                        <p>関連記事はありません</p>
-                    {% endif %}
+<!-- シェアボタン -->
+<div class="mb-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">この記事をシェア</h3>
+    <div class="flex gap-4">
+        <a href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.url }}" 
+           target="_blank"
+           class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+            </svg>
+            Twitter
+        </a>
+        
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
+           target="_blank"
+           class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+        </a>
+        
+        <button onclick="navigator.clipboard.writeText(window.location.href)" 
+                class="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            Copy Link
+        </button>
+    </div>
+</div>
+
+<!-- 関連記事 -->
+{% if related_posts %}
+<section class="mb-12">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">関連記事</h2>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for related_post in related_posts %}
+        <article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-primary-600 transition-colors">
+                    <a href="/blog/{{ related_post.slug }}">{{ related_post.title }}</a>
+                </h3>
+                {% if related_post.excerpt %}
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2">
+                    {{ related_post.excerpt }}
+                </p>
+                {% endif %}
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ related_post.date.strftime('%Y年%m月%d日') }}
                 </div>
             </div>
         </article>
-    </main>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
-    <footer class="container">
-        <hr>
-        <p><small>&copy; 2025 Hiroto Furugen</small></p>
-    </footer>
+<!-- 前後のナビゲーション -->
+<nav class="flex justify-between items-center py-8 border-t border-gray-200 dark:border-gray-700">
+    <a href="/blog" 
+       class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Blog
+    </a>
+    
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            class="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+        Back to Top
+    </button>
+</nav>
 
-    <!-- スクリプト -->
-    <script src="/static/js/theme.js"></script>
-    <script src="/static/js/hamburger.js"></script>
-</body>
-</html>
+<!-- スタイル調整 -->
+<style>
+.prose {
+    color: inherit;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    color: inherit;
+}
+
+.prose a {
+    color: rgb(59 130 246);
+    text-decoration: underline;
+}
+
+.prose a:hover {
+    color: rgb(37 99 235);
+}
+
+.dark .prose a {
+    color: rgb(96 165 250);
+}
+
+.dark .prose a:hover {
+    color: rgb(147 197 253);
+}
+
+.prose code {
+    background-color: rgb(243 244 246);
+    color: rgb(239 68 68);
+    padding: 0.25rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.dark .prose code {
+    background-color: rgb(55 65 81);
+    color: rgb(248 113 113);
+}
+
+.prose pre {
+    background-color: rgb(31 41 55);
+    color: rgb(229 231 235);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.prose pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

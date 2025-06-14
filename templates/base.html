@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    
+    <!-- Alpine.js (軽量使用) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- カスタムCSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Googleフォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <title>{% block title %}Staticle - Modern Blog{% endblock %}</title>
+    
+    <!-- TailwindCSS カスタム設定 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0f9ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <!-- ヘッダー -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- ロゴ -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors">
+                        Staticle
+                    </a>
+                </div>
+                
+                <!-- ナビゲーション -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors">
+                        Home
+                    </a>
+                    <a href="/blog" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors">
+                        Blog
+                    </a>
+                    <a href="#about" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors">
+                        About
+                    </a>
+                </div>
+                
+                <!-- ダークモードトグル -->
+                <button 
+                    x-data="{ dark: false }"
+                    @click="dark = !dark; document.documentElement.classList.toggle('dark')"
+                    class="p-2 rounded-md text-gray-500 hover:text-primary-600 transition-colors"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+                
+                <!-- モバイルメニューボタン -->
+                <div class="md:hidden">
+                    <button x-data="{ open: false }" @click="open = !open" class="p-2 rounded-md text-gray-500 hover:text-primary-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}
+        <!-- ヒーローセクション -->
+        <section class="text-center py-20">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                Welcome to <span class="text-primary-600">Staticle</span>
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Modern blog built with HTMX, FastAPI, and TailwindCSS. 
+                Fast, interactive, and developer-friendly.
+            </p>
+            <div class="space-x-4">
+                <a href="/blog" 
+                   class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                    Read Blog
+                </a>
+                <a href="#about" 
+                   class="inline-block border border-gray-300 dark:border-gray-600 hover:border-primary-600 text-gray-700 dark:text-gray-300 font-medium py-3 px-6 rounded-lg transition-colors">
+                    Learn More
+                </a>
+            </div>
+        </section>
+
+        <!-- 最新記事プレビュー -->
+        <section class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Latest Posts</h2>
+                <p class="text-gray-600 dark:text-gray-300">Stay updated with our latest articles and insights</p>
+            </div>
+            
+            <!-- HTMX で最新記事を読み込み -->
+            <div hx-get="/htmx/posts?limit=3" 
+                 hx-trigger="load" 
+                 hx-indicator="#loading" 
+                 class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <!-- ローディング表示 -->
+                <div id="loading" class="col-span-full text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+                    <p class="mt-2 text-gray-500">Loading posts...</p>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2025 Staticle. Built with ❤️ using HTMX & FastAPI.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- HTMX設定 -->
+    <script>
+        // HTMX設定
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            evt.detail.headers['X-Requested-With'] = 'XMLHttpRequest';
+        });
+        
+        // ローディングインジケーター
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            document.getElementById('loading')?.classList.remove('htmx-indicator');
+        });
+        
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            document.getElementById('loading')?.classList.add('htmx-indicator');
+        });
+    </script>
+</body>
+</html>
