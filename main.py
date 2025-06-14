@@ -51,6 +51,13 @@ async def blog(request: Request, category: str = None, tag: str = None):
         "current_tag": tag
     })
 
+@app.get("/portfolio", response_class=HTMLResponse)
+async def portfolio(request: Request):
+    """ポートフォリオページを表示"""
+    return templates.TemplateResponse("portfolio.html", {
+        "request": request
+    })
+
 # HTMX専用エンドポイント
 @app.get("/htmx/posts", response_class=HTMLResponse)
 async def htmx_posts(request: Request, category: str = None, tag: str = None, limit: int = None):
