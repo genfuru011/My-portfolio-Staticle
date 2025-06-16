@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Staticle Development Server (FastAPI + HTMX + TailwindCSS)
-echo "🚀 Starting Staticle Development Server (FastAPI + HTMX)..."
+# Staticle Development Server (Flask + HTMX + TailwindCSS)
+echo "🚀 Starting Staticle Development Server (Flask + HTMX)..."
 
 # 仮想環境の確認
 if [ ! -d ".venv" ]; then
@@ -20,12 +20,11 @@ pip install -r requirements.txt
 # 環境変数の設定（オプション）
 export ENVIRONMENT="development"
 export DEBUG="true"
+export FLASK_DEBUG=1
 
-# FastAPIサーバーの起動
-echo "🌟 Starting FastAPI server with HTMX support..."
-echo "📍 Server will be available at: http://localhost:8000"
-echo "📖 API documentation: http://localhost:8000/docs"
-echo "🔧 Interactive API: http://localhost:8000/redoc"
+# Flaskサーバーの起動
+echo "🌟 Starting Flask server with HTMX support..."
+echo "📍 Server will be available at: http://localhost:5000"
 echo ""
 echo "🎨 Features enabled:"
 echo "  - HTMX for dynamic interactions"
@@ -36,4 +35,4 @@ echo "  - Progressive enhancement"
 echo ""
 echo "Press Ctrl+C to stop the server"
 
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python app.py

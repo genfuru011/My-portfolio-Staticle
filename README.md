@@ -1,13 +1,13 @@
 # Staticle - Modern Blog Platform
 
-A modern, fast, and interactive blog platform built with **HTMX**, **FastAPI**, and **TailwindCSS**.
+A modern, fast, and interactive blog platform built with **Flask**, **HTMX**, and **TailwindCSS**.
 
 ## 🚀 Features
 
 - **Lightning Fast**: HTMX provides instant interactions without SPA complexity
-- **Modern Stack**: FastAPI backend with automatic API documentation
+- **Simple & Reliable**: Flask backend with proven stability
 - **Beautiful Design**: TailwindCSS with dark mode support
-- **Developer Friendly**: Type-safe Python with automatic reloading
+- **Developer Friendly**: Simple Python with automatic reloading
 - **Interactive**: Smooth filtering and dynamic content loading
 - **SEO Friendly**: Server-side rendering with progressive enhancement
 
@@ -19,7 +19,7 @@ A modern, fast, and interactive blog platform built with **HTMX**, **FastAPI**, 
 - **Alpine.js** - Minimal JavaScript for interactivity
 
 ### Backend
-- **FastAPI** - Modern Python web framework
+- **Flask** - Simple and reliable Python web framework
 - **Jinja2** - Template engine
 - **Python-Frontmatter** - Markdown with metadata support
 
@@ -27,7 +27,7 @@ A modern, fast, and interactive blog platform built with **HTMX**, **FastAPI**, 
 
 ```
 staticle/
-├── main.py                 # FastAPI application
+├── app.py                  # Flask application
 ├── app.py                  # Legacy Flask app (for migration)
 ├── blog_manager.py         # Blog content management
 ├── requirements.txt        # Python dependencies

@@ -1,14 +1,10 @@
-# FastAPI Backend
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+# Flask Backend
+flask==2.3.3
+gunicorn==21.2.0
 jinja2==3.1.2
-python-multipart==0.0.6
 
 # Blog functionality
 python-frontmatter==1.0.0
 markdown==3.4.4
 python-dateutil==2.8.2
 python-dotenv==1.0.0
-
-# Optional: Keep Flask for gradual migration
-flask==2.3.3
