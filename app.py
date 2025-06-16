@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, abort
-from blog_manager import BlogManager
+from core import BlogManager
 import os
 
 # Flaskアプリケーションの初期化 - カスタムフォルダ名を指定

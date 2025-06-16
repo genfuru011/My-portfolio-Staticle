@@ -2,6 +2,7 @@ import os
 import markdown
 import frontmatter
 import datetime
+import logging
 from flask import url_for
 
 class BlogManager:
