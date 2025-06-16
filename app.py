@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, Response
 from core import BlogManager
 import os
+from typing import Union, Tuple
 
 # Flaskアプリケーションの初期化 - カスタムフォルダ名を指定
 app = Flask(__name__,
@@ -12,7 +13,7 @@ posts_dir = os.path.join(os.path.dirname(__file__), 'content', 'posts')
 blog_manager = BlogManager(posts_dir)
 
 @app.route('/')
-def index():
+def index() -> str:
     """トップページを表示"""
     # ブログ統計を取得
     stats = blog_manager.get_post_stats()
@@ -20,7 +21,7 @@ def index():
     return render_template('index.html', stats=stats)
 
 @app.route('/blog')
-def blog():
+def blog() -> str:
     """ブログページを表示"""
     category = request.args.get('category')
     tag = request.args.get('tag')
@@ -45,13 +46,13 @@ def blog():
     )
 
 @app.route('/portfolio')
-def portfolio():
+def portfolio() -> str:
     """ポートフォリオページを表示"""
     return render_template('portfolio.html')
 
 # HTMX専用エンドポイント
 @app.route('/htmx/posts')
-def htmx_posts():
+def htmx_posts() -> str:
     """HTMX用のブログ投稿一覧"""
     category = request.args.get('category')
     tag = request.args.get('tag')
@@ -71,7 +72,7 @@ def htmx_posts():
     return render_template('components/post-list.html', posts=posts)
 
 @app.route('/htmx/search')
-def htmx_search():
+def htmx_search() -> str:
     """HTMX用の検索機能"""
     q = request.args.get('q', '')
     posts = blog_manager.search_posts(q) if q else []
@@ -79,8 +80,8 @@ def htmx_search():
     return render_template('components/post-list.html', posts=posts)
 
 @app.route('/blog/<slug>')
-def blog_post(slug):
-    """個別ブログ投稿を表示"""
+def blog_post(slug: str) -> Union[str, Response]:
+    """個別のブログ記事を表示"""
     post = blog_manager.get_post_by_slug(slug)
     if not post:
         abort(404)
@@ -91,7 +92,7 @@ def blog_post(slug):
 
 # 従来のルートも維持（後方互換性）
 @app.route('/blog/category/<category>')
-def blog_category(category):
+def blog_category(category: str) -> str:
     """特定カテゴリのブログ記事を表示"""
     posts = blog_manager.get_posts_by_category(category)
     categories = blog_manager.get_categories()
@@ -107,7 +108,7 @@ def blog_category(category):
     )
 
 @app.route('/blog/tag/<tag>')
-def blog_tag(tag):
+def blog_tag(tag: str) -> str:
     """特定タグのブログ記事を表示"""
     posts = blog_manager.get_posts_by_tag(tag)
     categories = blog_manager.get_categories()
@@ -123,7 +124,7 @@ def blog_tag(tag):
     )
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(e: Exception) -> Tuple[str, int]:
     """404エラーページを表示"""
     return render_template('404.html'), 404
 

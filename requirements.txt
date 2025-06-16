@@ -8,3 +8,8 @@ python-frontmatter==1.0.0
 markdown==3.4.4
 python-dateutil==2.8.2
 python-dotenv==1.0.0
+
+# Development dependencies
+mypy==1.8.0
+types-python-dateutil==2.8.19.14
+types-Markdown==3.5.0.3

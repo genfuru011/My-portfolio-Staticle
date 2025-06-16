@@ -4,9 +4,10 @@
 共通で使用される便利な関数を提供
 """
 
+import os
 import re
 import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union, Optional
 from markupsafe import Markup
 
 def slugify(text: str) -> str:
@@ -24,11 +25,12 @@ def truncate_text(text: str, length: int = 150, suffix: str = '...') -> str:
         return text
     return text[:length].rsplit(' ', 1)[0] + suffix
 
-def format_date(date: datetime.datetime, format_str: str = '%Y年%m月%d日') -> str:
+def format_date(date: Union[datetime.datetime, str], format_str: str = '%Y年%m月%d日') -> str:
     """日付をフォーマット"""
     if isinstance(date, str):
         try:
-            date = datetime.datetime.strptime(date, '%Y-%m-%d')
+            parsed_date = datetime.datetime.strptime(date, '%Y-%m-%d')
+            return parsed_date.strftime(format_str)
         except ValueError:
             return date
     return date.strftime(format_str)
@@ -105,11 +107,11 @@ class PaginationHelper:
         return self.page < self.total_pages
     
     @property
-    def prev_page(self) -> int:
+    def prev_page(self) -> Optional[int]:
         return self.page - 1 if self.has_prev else None
     
     @property
-    def next_page(self) -> int:
+    def next_page(self) -> Optional[int]:
         return self.page + 1 if self.has_next else None
     
     @property

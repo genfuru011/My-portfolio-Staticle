@@ -3,23 +3,24 @@ import markdown
 import frontmatter
 import datetime
 import logging
+from typing import List, Dict, Any, Optional, Union
 from flask import url_for
 
 class BlogManager:
     """ブログ記事を管理するクラス"""
 
-    def __init__(self, posts_dir):
+    def __init__(self, posts_dir: str) -> None:
         """
         初期化
 
         Args:
             posts_dir: マークダウンファイルが格納されているディレクトリのパス
         """
-        self.posts_dir = posts_dir
-        self.posts = []
+        self.posts_dir: str = posts_dir
+        self.posts: List[Dict[str, Any]] = []
         self.load_posts()
 
-    def load_posts(self):
+    def load_posts(self) -> List[Dict[str, Any]]:
         """マークダウンファイルを読み込んでpostリストに追加する"""
         self.posts = []
 
@@ -39,7 +40,7 @@ class BlogManager:
         self.posts.sort(key=lambda x: x.get('date', datetime.datetime.now()), reverse=True)
         return self.posts
 
-    def _parse_post(self, post_path, filename):
+    def _parse_post(self, post_path: str, filename: str) -> Optional[Dict[str, Any]]:
         """マークダウンファイルをパースする"""
         try:
             with open(post_path, 'r', encoding='utf-8') as file:
@@ -84,44 +85,44 @@ class BlogManager:
             logging.error(f"Error parsing {filename}: {str(e)}")
             return None
 
-    def get_all_posts(self):
+    def get_all_posts(self) -> List[Dict[str, Any]]:
         """すべての投稿を取得"""
         return self.posts
 
-    def get_post_by_slug(self, slug):
+    def get_post_by_slug(self, slug: str) -> Optional[Dict[str, Any]]:
         """特定のスラッグを持つ投稿を取得"""
         for post in self.posts:
             if post['slug'] == slug:
                 return post
         return None
 
-    def get_posts_by_category(self, category):
+    def get_posts_by_category(self, category: str) -> List[Dict[str, Any]]:
         """特定のカテゴリの投稿を取得"""
         return [post for post in self.posts if post['category'].lower() == category.lower()]
 
-    def get_posts_by_tag(self, tag):
+    def get_posts_by_tag(self, tag: str) -> List[Dict[str, Any]]:
         """特定のタグを持つ投稿を取得"""
         return [post for post in self.posts if tag.lower() in [t.lower() for t in post['tags']]]
 
-    def get_categories(self):
+    def get_categories(self) -> Dict[str, int]:
         """すべてのカテゴリを取得"""
-        categories = {}
+        categories: Dict[str, int] = {}
         for post in self.posts:
             category = post.get('category', '').lower()
             if category:
                 categories[category] = categories.get(category, 0) + 1
         return categories
 
-    def get_tags(self):
+    def get_tags(self) -> Dict[str, int]:
         """すべてのタグを取得"""
-        tags = {}
+        tags: Dict[str, int] = {}
         for post in self.posts:
             for tag in post.get('tags', []):
                 tag = tag.lower()
                 tags[tag] = tags.get(tag, 0) + 1
         return tags
 
-    def get_related_posts(self, post, max_posts=3):
+    def get_related_posts(self, post: Optional[Dict[str, Any]], max_posts: int = 3) -> List[Dict[str, Any]]:
         """関連記事を取得する
 
         Args:
@@ -140,7 +141,7 @@ class BlogManager:
         current_slug = post.get('slug', '')
 
         # 関連スコアを計算
-        related_posts = []
+        related_posts: List[Dict[str, Union[Dict[str, Any], int]]] = []
         for other_post in self.posts:
             # 同じ記事はスキップ
             if other_post.get('slug') == current_slug:
@@ -166,18 +167,18 @@ class BlogManager:
                 })
 
         # スコア順にソート
-        related_posts.sort(key=lambda x: x['score'], reverse=True)
+        related_posts.sort(key=lambda x: x['score'], reverse=True)  # type: ignore
 
         # 必要な数だけ取得
-        return [item['post'] for item in related_posts[:max_posts]]
+        return [item['post'] for item in related_posts[:max_posts]]  # type: ignore
 
-    def search_posts(self, query):
+    def search_posts(self, query: str) -> List[Dict[str, Any]]:
         """検索クエリに基づいて記事を検索する"""
         if not query or not query.strip():
             return []
             
         query = query.lower().strip()
-        matching_posts = []
+        matching_posts: List[Dict[str, Union[Dict[str, Any], int]]] = []
         
         for post in self.posts:
             score = 0
@@ -211,11 +212,11 @@ class BlogManager:
                 })
         
         # スコア順にソート
-        matching_posts.sort(key=lambda x: x['score'], reverse=True)
+        matching_posts.sort(key=lambda x: x['score'], reverse=True)  # type: ignore
         
-        return [item['post'] for item in matching_posts]
+        return [item['post'] for item in matching_posts]  # type: ignore
 
-    def get_post_stats(self):
+    def get_post_stats(self) -> Dict[str, Union[int, Optional[Dict[str, Any]]]]:
         """ブログの統計情報を取得する"""
         return {
             'total_posts': len(self.posts),
