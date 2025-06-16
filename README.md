@@ -28,6 +28,29 @@ A modern, fast, and interactive blog platform built with **Flask**, **HTMX**, an
 ```
 staticle/
 ├── app.py                  # Flask application
+├── blog_manager.py         # Blog content management
+├── requirements.txt        # Python dependencies
+├── Procfile               # Render deployment config
+├── runtime.txt            # Python version specification
+├── scripts/               # Build and development scripts
+│   ├── start.sh          # Development server
+│   ├── setup.sh          # Environment setup
+│   ├── build.sh          # Production build
+│   └── deploy-render.sh  # Render deployment
+├── views/                 # Template files (formerly templates)
+│   ├── base.html         # Base template
+│   ├── index.html        # Homepage
+│   ├── blog.html         # Blog listing
+│   ├── blog_post.html    # Individual post
+│   ├── portfolio.html    # Portfolio page
+│   ├── 404.html          # Error page
+│   └── components/       # Reusable components
+├── assets/               # Static files (formerly static)
+│   ├── css/             # Stylesheets
+│   ├── js/              # JavaScript files
+│   └── img/             # Images
+└── content/             # Blog content
+    └── posts/           # Markdown blog posts
 ├── app.py                  # Legacy Flask app (for migration)
 ├── blog_manager.py         # Blog content management
 ├── requirements.txt        # Python dependencies
@@ -43,28 +66,42 @@ staticle/
 
 ## 🚀 Quick Start
 
+### Development Setup
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd staticle
+
+# Set up development environment
+./scripts/setup.sh
+```
+
 ### Development Server
 
 ```bash
-# Make script executable
-chmod +x start.sh
-
 # Start development server
-./start.sh
+./scripts/start.sh
 ```
 
 Or manually:
 
 ```bash
-# Create virtual environment
-python -m venv .venv
+# Activate virtual environment
 source .venv/bin/activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Start Flask server
+python app.py
+```
 
-# Start FastAPI server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+### Production Build
+
+```bash
+# Validate build
+./scripts/build.sh
+
+# Deploy to Render
+./scripts/deploy-render.sh
 ```
 
 ### Access Points

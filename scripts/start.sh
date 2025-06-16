@@ -24,7 +24,7 @@ export FLASK_DEBUG=1
 
 # Flaskサーバーの起動
 echo "🌟 Starting Flask server with HTMX support..."
-echo "📍 Server will be available at: http://localhost:5000"
+echo "📍 Server will be available at: http://localhost:5001"
 echo ""
 echo "🎨 Features enabled:"
 echo "  - HTMX for dynamic interactions"
