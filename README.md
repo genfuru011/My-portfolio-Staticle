@@ -1,4 +1,4 @@
-# Staticle - Modern Blog Platform
+# Portfolio - Modern Blog Platform
 
 A modern, lightweight, and interactive blog platform built with **Flask**, **HTMX**, and **TailwindCSS**. Optimized for easy deployment on **Render**.
 
